@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<body style="text-align:center;font-family:sans-serif;">
+  <h2>MyanGold Downloads</h2>
+  <h1 id="count">Loading...</h1>
+
+  <script>
+    fetch("https://qpzbratllrarsyiqcemr.supabase.co/rest/v1/apk_downloads?select=id", {
+      headers: {
+        apikey: "sb_publishable_FkGEnUjO5fQBlWXZoEWM9Q_RJQnQX9l",
+        Authorization: "Bearer sb_publishable_FkGEnUjO5fQBlWXZoEWM9Q_RJQnQX9l"
+      }
+    })
+    .then(res => res.json())
+    .then(data => {
+      document.getElementById("count").innerText = data.length;
+    })
+    .catch(err => {
+      document.getElementById("count").innerText = "Error";
+      console.log(err);
+    });
+  </script>
+</body>
+</html>
