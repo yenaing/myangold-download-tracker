@@ -1,24 +1,234 @@
 <!DOCTYPE html>
-<html>
-<body style="text-align:center;font-family:sans-serif;">
-  <h2>MyanGold Downloads</h2>
-  <h1 id="count">Loading...</h1>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MyanGOLD Download Counter</title>
 
-  <script>
-    fetch("https://qpzbratllrarsyiqcemr.supabase.co/rest/v1/apk_downloads?select=id", {
-      headers: {
-        apikey: "sb_publishable_FkGEnUjO5fQBlWXZoEWM9Q_RJQnQX9l",
-        Authorization: "Bearer sb_publishable_FkGEnUjO5fQBlWXZoEWM9Q_RJQnQX9l"
+  <style>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+    }
+
+    body{
+      font-family: Arial, sans-serif;
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:
+        linear-gradient(135deg,#1a1a1a,#2b2b2b,#111);
+      color:white;
+      overflow:hidden;
+    }
+
+    .bg-glow{
+      position:absolute;
+      width:500px;
+      height:500px;
+      background:gold;
+      opacity:0.08;
+      filter:blur(120px);
+      border-radius:50%;
+      top:-150px;
+      right:-100px;
+    }
+
+    .card{
+      position:relative;
+      width:90%;
+      max-width:420px;
+      padding:40px 30px;
+      border-radius:28px;
+      background:rgba(255,255,255,0.06);
+      backdrop-filter: blur(12px);
+      border:1px solid rgba(255,255,255,0.1);
+      box-shadow:
+        0 10px 40px rgba(0,0,0,0.4),
+        0 0 20px rgba(255,215,0,0.15);
+      text-align:center;
+      z-index:2;
+    }
+
+    .logo{
+      width:90px;
+      height:90px;
+      margin:0 auto 20px;
+      border-radius:24px;
+      background:linear-gradient(135deg,#FFD700,#ffb300);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:42px;
+      color:#222;
+      font-weight:bold;
+      box-shadow:0 8px 25px rgba(255,215,0,0.35);
+    }
+
+    h1{
+      font-size:32px;
+      margin-bottom:10px;
+      color:#FFD700;
+      letter-spacing:1px;
+    }
+
+    .subtitle{
+      color:#ccc;
+      margin-bottom:30px;
+      font-size:15px;
+    }
+
+    .counter-box{
+      padding:28px 20px;
+      border-radius:22px;
+      background:rgba(255,215,0,0.08);
+      border:1px solid rgba(255,215,0,0.15);
+      margin-bottom:25px;
+    }
+
+    .counter-label{
+      font-size:14px;
+      color:#ddd;
+      margin-bottom:10px;
+      text-transform:uppercase;
+      letter-spacing:2px;
+    }
+
+    #count{
+      font-size:56px;
+      font-weight:bold;
+      color:#FFD700;
+      text-shadow:0 0 18px rgba(255,215,0,0.35);
+    }
+
+    .download-btn{
+      display:inline-block;
+      padding:14px 28px;
+      border-radius:14px;
+      background:linear-gradient(135deg,#FFD700,#ffb300);
+      color:#222;
+      text-decoration:none;
+      font-weight:bold;
+      transition:0.25s;
+      box-shadow:0 8px 20px rgba(255,215,0,0.25);
+    }
+
+    .download-btn:hover{
+      transform:translateY(-3px);
+      box-shadow:0 12px 24px rgba(255,215,0,0.4);
+    }
+
+    .footer{
+      margin-top:24px;
+      font-size:13px;
+      color:#999;
+    }
+
+    .pulse{
+      animation:pulse 2s infinite;
+    }
+
+    @keyframes pulse{
+      0%{
+        transform:scale(1);
       }
-    })
-    .then(res => res.json())
-    .then(data => {
-      document.getElementById("count").innerText = data.length;
-    })
-    .catch(err => {
-      document.getElementById("count").innerText = "Error";
-      console.log(err);
-    });
-  </script>
+      50%{
+        transform:scale(1.03);
+      }
+      100%{
+        transform:scale(1);
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="bg-glow"></div>
+
+<div class="card pulse">
+
+  <div class="logo">
+    MG
+  </div>
+
+  <h1>MyanGOLD</h1>
+
+  <div class="subtitle">
+    Android Application Download Statistics
+  </div>
+
+  <div class="counter-box">
+    <div class="counter-label">
+      Total Downloads
+    </div>
+
+    <div id="count">Loading...</div>
+  </div>
+
+  <a class="download-btn"
+     href="https://drive.google.com/uc?export=download&id=1WjG63D2hAB2OknTEnP4iV0QEHC0hJRgt">
+     Download APK
+  </a>
+
+  <div class="footer">
+    MyanGOLD ERP System • Myanmar Gold Shop Management
+  </div>
+
+</div>
+
+<script>
+
+  const SUPABASE_URL =
+    "https://qpzbratllrarsyiqcemr.supabase.co";
+
+  const SUPABASE_KEY =
+    "YOUR_ANON_PUBLIC_KEY";
+
+  fetch(
+    SUPABASE_URL + "/rest/v1/apk_downloads?select=id",
+    {
+      headers: {
+        apikey: SUPABASE_KEY,
+        Authorization: "Bearer " + SUPABASE_KEY
+      }
+    }
+  )
+  .then(res => res.json())
+  .then(data => {
+
+    const target = data.length;
+    let current = 0;
+
+    const counter = document.getElementById("count");
+
+    const interval = setInterval(() => {
+
+      current += Math.ceil(target / 40);
+
+      if(current >= target){
+        current = target;
+        clearInterval(interval);
+      }
+
+      counter.innerText =
+        current.toLocaleString();
+
+    }, 40);
+
+  })
+  .catch(err => {
+
+    document.getElementById("count").innerText =
+      "Error";
+
+    console.log(err);
+
+  });
+
+</script>
+
 </body>
 </html>
